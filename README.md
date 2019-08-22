@@ -20,11 +20,27 @@ simplepwd -f abc -p "abc123"
 ```
 /a TITLE USERNAME PASSWORD
 ```
+### delete record
+```
+/d 3
+```
 
 ### save
 ```
 /s
 ```
+
+### navigate pages
+```
+/n  next page
+/p  previous page
+```
+
+### show info
+```
+2   number/index of the record
+```
+
 
 ### Print file content and read it in less
 ```
@@ -47,8 +63,8 @@ go build -o bin/simplepwd
 - [x] Add record
 - [x] Save
 - [x] Output to stdout
-- [ ] Show password in REPL
-- [ ] Remove record
+- [x] Show password in REPL
+- [x] Remove record
 - [ ] Edit record
 - [ ] Research stronger Encrypt/Decrypt
 - [ ] Error handling

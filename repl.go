@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"simplepwd/crypto"
+	"strconv"
 	"strings"
 )
 
@@ -23,6 +24,16 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		password := (*cmd)[3]
 		*data = append([]standard{{Title: title, Username: username, Password: password}}, *data...)
 		break
+	case "/d":
+		// delete
+		pos := (*cmd)[1]
+		posnum, err := strconv.Atoi(pos)
+		if err != nil {
+			break
+		}
+		posnum--
+		*data = append((*data)[:posnum], (*data)[posnum+1:]...)
+		break
 	default:
 		break
 	}
@@ -30,12 +41,39 @@ func cmdParse(cmd *[]string, data *[]standard) {
 
 func currDataPrinter(data *[]standard) {
 	fmt.Printf("Page %d \n", page+1)
-	for i, s := range *data {
+	for i, s := range (*data)[page*printlimit:] {
 		if i == printlimit {
 			break
 		}
-		fmt.Printf("%d. %s\n", (page*printlimit + i), s.Title)
+		fmt.Printf("%d. %s\n", (page*printlimit + i + 1), s.Title)
 	}
+}
+
+func cls() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
+func printStd(content *standard, r *bufio.Reader) {
+	for {
+		cls()
+		println("=============")
+		fmt.Printf("- Title    : %s\n", content.Title)
+		fmt.Printf("- Username : %s\n", content.Username)
+		fmt.Printf("- Password : %s\n", content.Password)
+		println("=============")
+		println("Enter /b to go back")
+		inputraw, err := r.ReadString('\n')
+		if err != nil {
+			panic(err.Error())
+		}
+		input := strings.TrimSpace(inputraw)
+		if input == "/b" {
+			break
+		}
+	}
+
 }
 
 func repl(data *[]byte) {
@@ -47,10 +85,11 @@ func repl(data *[]byte) {
 		}
 	}
 
-	println("simplepwd 📝")
-	println("============")
 	reader := bufio.NewReader(os.Stdin)
 	for {
+		cls()
+		println("simplepwd 📝")
+		println("============")
 		currDataPrinter(&arrdata)
 		print("> ")
 		inputraw, err := reader.ReadString('\n')
@@ -63,9 +102,7 @@ func repl(data *[]byte) {
 			println("Bye ~")
 			return
 		case "clear":
-			cmd := exec.Command("clear")
-			cmd.Stdout = os.Stdout
-			cmd.Run()
+			cls()
 			break
 		case "/s":
 			// save
@@ -78,23 +115,34 @@ func repl(data *[]byte) {
 			break
 		case "/n":
 			// next page
-			if (len(arrdata) / printlimit) > (page + 1) {
+			if (len(arrdata) / printlimit) >= (page + 1) {
 				page++
 			}
 			break
 		case "/p":
 			// previous
-			if page > 1 {
+			if page > 0 {
 				page--
-				break
 			}
+			break
 		default:
 			// parse
 			cmd := strings.Split(input, " ")
-			if len(cmd) < 2 {
-				continue
+			switch len(cmd) {
+			case 0:
+				break
+			case 1:
+				// probably number
+				i, err := strconv.Atoi(cmd[0])
+				if err != nil {
+					break
+				}
+				printStd(&arrdata[i-1], reader)
+				break
+			default:
+				cmdParse(&cmd, &arrdata)
+				break
 			}
-			cmdParse(&cmd, &arrdata)
 			continue
 		}
 	}
