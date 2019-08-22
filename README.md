@@ -1,6 +1,8 @@
 # SimplePassword 🔑
 ## very minimal password manager
 
+<a href="https://asciinema.org/a/zC84FUt0hazWae8QJMnJz9Xjw" target="_blank"><img src="https://asciinema.org/a/zC84FUt0hazWae8QJMnJz9Xjw.svg" /></a>
+
 ## Usage
 ### flags
 ```
