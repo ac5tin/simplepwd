@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+var page = 0
+
+const printlimit int = 5
+
 func cmdParse(cmd *[]string, data *[]standard) {
 	switch (*cmd)[0] {
 	case "/a":
@@ -25,12 +29,12 @@ func cmdParse(cmd *[]string, data *[]standard) {
 }
 
 func currDataPrinter(data *[]standard) {
-	printlimit := 5
+	fmt.Printf("Page %d \n", page+1)
 	for i, s := range *data {
 		if i == printlimit {
 			break
 		}
-		fmt.Printf("%d. %s\n", i, s.Title)
+		fmt.Printf("%d. %s\n", (page*printlimit + i), s.Title)
 	}
 }
 
@@ -72,6 +76,18 @@ func repl(data *[]byte) {
 			crypto.EncryptFile(*filename, &d, *password)
 			println("-- saved --")
 			break
+		case "/n":
+			// next page
+			if (len(arrdata) / printlimit) > (page + 1) {
+				page++
+			}
+			break
+		case "/p":
+			// previous
+			if page > 1 {
+				page--
+				break
+			}
 		default:
 			// parse
 			cmd := strings.Split(input, " ")

@@ -56,7 +56,7 @@ func dec(data *[]byte, passphrase string) *[]byte {
 
 // EncryptFile encrypts a file with a password
 func EncryptFile(filename string, data *[]byte, passphrase string) {
-	f, _ := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, _ := os.OpenFile(filename, os.O_RDWR, 0644)
 	defer f.Close()
 	f.Write(enc(data, passphrase))
 }
