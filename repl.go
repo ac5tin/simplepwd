@@ -106,12 +106,13 @@ func repl(data *[]byte) {
 			break
 		case "/s":
 			// save
+			println("-- save --")
 			d, err := json.Marshal(arrdata)
 			if err != nil {
 				panic(err.Error())
 			}
+			println(string(d)) //debug
 			crypto.EncryptFile(*filename, &d, *password)
-			println("-- saved --")
 			break
 		case "/n":
 			// next page
