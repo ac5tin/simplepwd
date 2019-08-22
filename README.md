@@ -24,6 +24,15 @@ simplepwd -f abc -p "abc123"
 simplepwd -f abc -p "abc123" -d|jq -C .|less -R
 ```
 
+### Run
+```
+go run *.go -f abc -p "abc123"
+```
+### Build + Run
+```
+go build -o bin/simplepwd
+./bin/simplepwd -f abc -p "abc123"
+```
 
 ## Progress
 - [x] Encrypt/Decrypt
@@ -31,7 +40,7 @@ simplepwd -f abc -p "abc123" -d|jq -C .|less -R
 - [x] Add record
 - [x] Save
 - [x] Output to stdout
-- [ ] Show passwor in REPL
+- [ ] Show password in REPL
 - [ ] Remove record
 - [ ] Edit record
 - [ ] Research stronger Encrypt/Decrypt
