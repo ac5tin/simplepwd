@@ -111,7 +111,6 @@ func repl(data *[]byte) {
 			if err != nil {
 				panic(err.Error())
 			}
-			println(string(d)) //debug
 			crypto.EncryptFile(*filename, &d, *password)
 			break
 		case "/n":
