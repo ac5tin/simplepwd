@@ -19,6 +19,11 @@ simplepwd -f abc -p "abc123"
 /a TITLE USERNAME PASSWORD
 ```
 
+### save
+```
+/s
+```
+
 ### Print file content and read it in less
 ```
 simplepwd -f abc -p "abc123" -d|jq -C .|less -R
