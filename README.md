@@ -24,6 +24,16 @@ simplepwd -f abc -p "abc123"
 ```
 /d 3
 ```
+### update record
+```
+/u INDEX FIELD VALUE
+FIELD = title / username / password
+```
+#### e.g.
+```
+/u 23 username john
+/u 23 password abcdef1
+```
 
 ### save
 ```
@@ -35,6 +45,7 @@ simplepwd -f abc -p "abc123"
 /n  next page
 /p  previous page
 ```
+
 
 ### show info
 ```
@@ -65,6 +76,6 @@ go build -o bin/simplepwd
 - [x] Output to stdout
 - [x] Show password in REPL
 - [x] Remove record
-- [ ] Edit record
+- [x] Edit record
 - [ ] Research stronger Encrypt/Decrypt
 - [ ] Error handling

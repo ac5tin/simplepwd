@@ -34,6 +34,33 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		posnum--
 		*data = append((*data)[:posnum], (*data)[posnum+1:]...)
 		break
+	case "/u":
+		// update
+		pos := (*cmd)[1]
+		field := (*cmd)[2]
+		value := (*cmd)[3]
+		posnum, err := strconv.Atoi(pos)
+		if err != nil {
+			break
+		}
+		posnum--
+
+		updated := (*data)[posnum]
+		switch field {
+		case "Title", "title":
+			updated.Title = value
+			break
+		case "Username", "username":
+			updated.Username = value
+			break
+		case "Password", "password":
+			updated.Password = value
+			break
+		default:
+			break
+		}
+		(*data)[posnum] = updated
+		break
 	default:
 		break
 	}
