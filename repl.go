@@ -67,7 +67,7 @@ func cmdParse(cmd *[]string, data *[]standard) {
 }
 
 func currDataPrinter(data *[]standard) {
-	fmt.Printf("Page %d \n", page+1)
+	fmt.Printf("Page %d of %d\n", page+1, len(*data)/printlimit+1)
 	for i, s := range (*data)[page*printlimit:] {
 		if i == printlimit {
 			break
