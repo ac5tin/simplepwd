@@ -40,6 +40,16 @@ FIELD = title / username / password
 /s
 ```
 
+### find / search record
+```
+/f foobar
+```
+#### To reset search text
+```
+/f
+```
+
+
 ### navigate pages
 ```
 /n  next page
@@ -77,5 +87,6 @@ go build -o bin/simplepwd
 - [x] Show password in REPL
 - [x] Remove record
 - [x] Edit record
+- [x] Search record
 - [ ] Research stronger Encrypt/Decrypt
 - [ ] Error handling

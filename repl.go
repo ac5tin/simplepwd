@@ -12,6 +12,7 @@ import (
 )
 
 var page = 0
+var searchTxt = ""
 
 const printlimit int = 5
 
@@ -61,14 +62,30 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		}
 		(*data)[posnum] = updated
 		break
+	case "/f":
+		// find/search
+		searchTxt = (*cmd)[1]
+		break
 	default:
 		break
 	}
 }
 
+func filter(data *[]standard) []standard {
+	var retme []standard
+	for _, v := range *data {
+		// search text
+		if strings.Contains(v.Title, searchTxt) {
+			retme = append(retme, v)
+		}
+	}
+	return retme
+}
+
 func currDataPrinter(data *[]standard) {
-	fmt.Printf("Page %d of %d\n", page+1, len(*data)/printlimit+1)
-	for i, s := range (*data)[page*printlimit:] {
+	filtered := filter(data)
+	fmt.Printf("Page %d of %d\n", page+1, len(filtered)/printlimit+1)
+	for i, s := range (filtered)[page*printlimit:] {
 		if i == printlimit {
 			break
 		}
@@ -80,6 +97,12 @@ func cls() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
+
+func printFilter() {
+	if searchTxt != "" {
+		fmt.Printf("Searching : %s (Enter /f to reset)\n", searchTxt)
+	}
 }
 
 func printStd(content *standard, r *bufio.Reader) {
@@ -117,6 +140,7 @@ func repl(data *[]byte) {
 		cls()
 		println("simplepwd 📝")
 		println("============")
+		printFilter()
 		currDataPrinter(&arrdata)
 		print("> ")
 		inputraw, err := reader.ReadString('\n')
@@ -125,6 +149,7 @@ func repl(data *[]byte) {
 		}
 		input := strings.TrimSpace(inputraw)
 		switch input {
+		// exact matches (command wiht no arguments)
 		case ":q", "/q", "bye", "quit", "exit":
 			println("Bye ~")
 			return
@@ -132,7 +157,7 @@ func repl(data *[]byte) {
 			cls()
 			break
 		case "/s":
-			// save
+			// save/write
 			println("-- save --")
 			d, err := json.Marshal(arrdata)
 			if err != nil {
@@ -152,21 +177,33 @@ func repl(data *[]byte) {
 				page--
 			}
 			break
+		case "/f":
+			// find/search (CLEAR)
+			searchTxt = ""
+			break
 		default:
 			// parse
+			// first check there are spaces
+			// if spaces exist, probably means user wants to enter a command (not select a number)
 			cmd := strings.Split(input, " ")
 			switch len(cmd) {
 			case 0:
+				// user didnt enter anything,
 				break
 			case 1:
+				// user only entered 1 argument, no spaces
 				// probably number
 				i, err := strconv.Atoi(cmd[0])
 				if err != nil {
+					// no, user didnt enter a number
 					break
 				}
-				printStd(&arrdata[i-1], reader)
+				// user entered a number, print info
+				filteredData := filter(&arrdata)
+				printStd(&filteredData[i-1], reader)
 				break
 			default:
+				// user entered more than 1 argument, probably a command (with arguments)
 				cmdParse(&cmd, &arrdata)
 				break
 			}
