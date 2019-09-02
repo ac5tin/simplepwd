@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"simplepwd/crypto"
 	"strconv"
 	"strings"
@@ -94,9 +95,19 @@ func currDataPrinter(data *[]standard) {
 }
 
 func cls() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	switch runtime.GOOS {
+	case "windows":
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		break
+	default:
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		break
+	}
+
 }
 
 func printFilter() {
