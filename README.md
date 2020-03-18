@@ -90,3 +90,4 @@ go build -o bin/simplepwd
 - [x] Search record
 - [ ] Research stronger Encrypt/Decrypt
 - [ ] Error handling
+- [ ] More/Custom Fields

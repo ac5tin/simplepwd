@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"runtime"
 	"simplepwd/crypto"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -33,7 +34,7 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		if err != nil {
 			break
 		}
-		posnum--
+
 		*data = append((*data)[:posnum], (*data)[posnum+1:]...)
 		break
 	case "/u":
@@ -45,7 +46,6 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		if err != nil {
 			break
 		}
-		posnum--
 
 		updated := (*data)[posnum]
 		switch field {
@@ -65,6 +65,7 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		break
 	case "/f":
 		// find/search
+		page = 0
 		searchTxt = (*cmd)[1]
 		break
 	default:
@@ -72,12 +73,12 @@ func cmdParse(cmd *[]string, data *[]standard) {
 	}
 }
 
-func filter(data *[]standard) []standard {
-	var retme []standard
-	for _, v := range *data {
+func filter(data *[]standard) map[uint32]standard {
+	retme := make(map[uint32]standard)
+	for i, v := range *data {
 		// search text
 		if strings.Contains(v.Title, searchTxt) {
-			retme = append(retme, v)
+			retme[uint32(i)] = v
 		}
 	}
 	return retme
@@ -86,11 +87,25 @@ func filter(data *[]standard) []standard {
 func currDataPrinter(data *[]standard) {
 	filtered := filter(data)
 	fmt.Printf("Page %d of %d\n", page+1, len(filtered)/printlimit+1)
-	for i, s := range (filtered)[page*printlimit:] {
-		if i == printlimit {
+
+	// sort key
+	keys := []uint32{}
+	for k := range filtered {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(x, y int) bool { return keys[x] < keys[y] })
+
+	i := 0
+	for _, k := range keys {
+		if i < page*printlimit {
+			i++
+			continue
+		}
+		if i >= page*printlimit+printlimit {
 			break
 		}
-		fmt.Printf("%d. %s\n", (page*printlimit + i + 1), s.Title)
+		fmt.Printf("%d. %s\n", k, filtered[k].Title)
+		i++
 	}
 }
 
@@ -211,7 +226,8 @@ func repl(data *[]byte) {
 				}
 				// user entered a number, print info
 				filteredData := filter(&arrdata)
-				printStd(&filteredData[i-1], reader)
+				t := filteredData[uint32(i)]
+				printStd(&t, reader)
 				break
 			default:
 				// user entered more than 1 argument, probably a command (with arguments)
