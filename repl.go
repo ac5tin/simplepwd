@@ -11,6 +11,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/atotto/clipboard"
 )
 
 var page = 0
@@ -132,6 +134,7 @@ func printFilter() {
 }
 
 func printStd(content *standard, r *bufio.Reader) {
+loop:
 	for {
 		cls()
 		println("=============")
@@ -145,8 +148,15 @@ func printStd(content *standard, r *bufio.Reader) {
 			panic(err.Error())
 		}
 		input := strings.TrimSpace(inputraw)
-		if input == "/b" {
+		switch input {
+		case "user", "username":
+			clipboard.WriteAll(content.Username)
 			break
+		case "pw", "password":
+			clipboard.WriteAll(content.Password)
+			break
+		case "/b":
+			break loop
 		}
 	}
 

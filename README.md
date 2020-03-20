@@ -62,6 +62,12 @@ FIELD = title / username / password
 2   number/index of the record
 ```
 
+### Copy to clipboard (while showing info)
+```
+pw  # copies password
+user # copies username
+```
+
 
 ### Print file content and read it in less
 ```
@@ -88,6 +94,7 @@ go build -o bin/simplepwd
 - [x] Remove record
 - [x] Edit record
 - [x] Search record
+- [x] Copy to clipboard
 - [ ] Research stronger Encrypt/Decrypt
 - [ ] Error handling
 - [ ] More/Custom Fields
