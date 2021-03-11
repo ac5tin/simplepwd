@@ -2,4 +2,4 @@ module simplepwd
 
 go 1.14
 
-require github.com/atotto/clipboard v0.1.2
+require github.com/atotto/clipboard v0.1.4
