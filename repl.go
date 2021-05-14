@@ -28,7 +28,6 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		username := (*cmd)[2]
 		password := (*cmd)[3]
 		*data = append([]standard{{Title: title, Username: username, Password: password}}, *data...)
-		break
 	case "/d":
 		// delete
 		pos := (*cmd)[1]
@@ -38,7 +37,6 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		}
 
 		*data = append((*data)[:posnum], (*data)[posnum+1:]...)
-		break
 	case "/u":
 		// update
 		pos := (*cmd)[1]
@@ -53,23 +51,18 @@ func cmdParse(cmd *[]string, data *[]standard) {
 		switch field {
 		case "Title", "title":
 			updated.Title = value
-			break
 		case "Username", "username":
 			updated.Username = value
-			break
 		case "Password", "password":
 			updated.Password = value
-			break
 		default:
 			break
 		}
 		(*data)[posnum] = updated
-		break
 	case "/f":
 		// find/search
 		page = 0
 		searchTxt = (*cmd)[1]
-		break
 	default:
 		break
 	}
@@ -117,12 +110,10 @@ func cls() {
 		cmd := exec.Command("cmd", "/c", "cls")
 		cmd.Stdout = os.Stdout
 		cmd.Run()
-		break
 	default:
 		cmd := exec.Command("clear")
 		cmd.Stdout = os.Stdout
 		cmd.Run()
-		break
 	}
 
 }
@@ -159,10 +150,8 @@ loop:
 		switch input {
 		case "user", "username":
 			clipboard.WriteAll(content.Username)
-			break
 		case "pw", "password":
 			clipboard.WriteAll(content.Password)
-			break
 		case "/b":
 			break loop
 		}
@@ -199,7 +188,6 @@ func repl(data *[]byte) {
 			return
 		case "clear":
 			cls()
-			break
 		case "/s":
 			// save/write
 			println("-- save --")
@@ -208,23 +196,19 @@ func repl(data *[]byte) {
 				panic(err.Error())
 			}
 			crypto.EncryptFile(*filename, &d, *password)
-			break
 		case "/n":
 			// next page
 			if (len(arrdata) / printlimit) >= (page + 1) {
 				page++
 			}
-			break
 		case "/p":
 			// previous
 			if page > 0 {
 				page--
 			}
-			break
 		case "/f":
 			// find/search (CLEAR)
 			searchTxt = ""
-			break
 		default:
 			// parse
 			// first check there are spaces
@@ -246,11 +230,9 @@ func repl(data *[]byte) {
 				filteredData := filter(&arrdata)
 				t := filteredData[uint32(i)]
 				printStd(&t, reader)
-				break
 			default:
 				// user entered more than 1 argument, probably a command (with arguments)
 				cmdParse(&cmd, &arrdata)
-				break
 			}
 			continue
 		}
