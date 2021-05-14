@@ -133,6 +133,14 @@ func printFilter() {
 	}
 }
 
+func pwHide(pw string) string {
+	retme := ""
+	for i := 0; i < len(pw); i++ {
+		retme += "*"
+	}
+	return retme
+}
+
 func printStd(content *standard, r *bufio.Reader) {
 loop:
 	for {
@@ -140,7 +148,7 @@ loop:
 		println("=============")
 		fmt.Printf("- Title    : %s\n", content.Title)
 		fmt.Printf("- Username : %s\n", content.Username)
-		fmt.Printf("- Password : %s\n", content.Password)
+		fmt.Printf("- Password : %s\n", pwHide(content.Password))
 		println("=============")
 		println("Enter /b to go back")
 		inputraw, err := r.ReadString('\n')
