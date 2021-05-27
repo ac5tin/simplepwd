@@ -3,8 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"simplepwd/crypto"
 	"simplepwd/useful"
+	"syscall"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var (
@@ -21,6 +25,14 @@ func main() {
 
 	if useful.FileExist(*filename) {
 		// file exists, decrypt file content
+		if *password == "" {
+			fmt.Println("Please Enter Password")
+			bytePw, err := terminal.ReadPassword(int(syscall.Stdin))
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+			*password = string(bytePw)
+		}
 		data := crypto.DecryptFile(*filename, *password)
 		if *dec {
 			fmt.Println(string(*data))
