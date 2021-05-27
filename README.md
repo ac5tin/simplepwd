@@ -12,7 +12,10 @@
 ```
 
 ### To Start
-```
+```sh
+simplepwd -f abc -p "abc123"
+
+# all in one line
 simplepwd -f abc -p "abc123"
 ```
 
@@ -66,6 +69,11 @@ FIELD = title / username / password
 ```
 pw  # copies password
 user # copies username
+```
+
+### Update / Change File Encryption password
+```
+simplepwd -f pass -c
 ```
 
 
